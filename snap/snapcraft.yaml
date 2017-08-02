@@ -13,7 +13,7 @@ confinement: strict
 
 apps:
   mpv:
-    command: desktop-launch $SNAP/usr/local/bin/mpv
+    command: desktop-launch $SNAP/usr/bin/mpv
     plugs: [x11, opengl, unity7, pulseaudio, home, network, removable-media, optical-drive]
 
 parts:
@@ -22,12 +22,24 @@ parts:
     plugin: python
     python-version: python3
     after: [ffmpeg]
+
   mpv:
     source: https://github.com/mpv-player/mpv/archive/v0.26.0.tar.gz
     plugin: waf
+    configflags:
+      - --enable-cdda
+      - --enable-dvdnav
+      - --enable-dvdread
+      - --enable-encoding
+      - --enable-libmpv-shared
+      - --disable-static-build
+      - --enable-libsmbclient
+      - --enable-lua
+      - --disable-build-date
     prepare: |
       ./bootstrap.py
     stage-packages:
+      - lua5.2
       - libasound2
       - libass5
       - libatomic1
@@ -69,6 +81,7 @@ parts:
       - libxss1
       - libxv1
       - zlib1g
+      - libsodium18
     build-packages:  
       - build-essential
       - libasound2-dev
@@ -89,6 +102,7 @@ parts:
       - libpulse-dev
       - librubberband-dev
       - libsdl2-dev
+      - libssl-dev
       - libsmbclient-dev
       - libsndio-dev
       - libswscale-dev
@@ -109,41 +123,138 @@ parts:
     after:
       - desktop-glib-only
       - ffmpeg
+    organize:
+      usr/local: usr/
+    # Exclude some junk from the final snap
+    prime:
+      - -usr/include
+      - -usr/share/doc
+      - -usr/share/icons
+      - -usr/doc
+      - -usr/man
 
   ffmpeg:
     source: https://ffmpeg.org/releases/ffmpeg-3.3.3.tar.xz 
     plugin: autotools
-    configflags: [--enable-gpl, --enable-libass, --enable-libfreetype, --enable-libmp3lame, --enable-libopus, --enable-libtheora, --enable-libvorbis, --enable-libvpx, --enable-libx264, --enable-libx265, --enable-openssl, --enable-nonfree]
+    configflags:
+      - --enable-gpl
+      - --enable-openssl
+      - --enable-nonfree
+      - --enable-avresample
+      - --enable-avisynth
+      - --enable-ladspa
+      - --enable-libass
+      - --enable-libbluray
+      - --enable-libbs2b
+      - --enable-libcaca
+      - --enable-libcdio
+      - --enable-libflite
+      - --enable-libfontconfig
+      - --enable-libfreetype
+      - --enable-libfribidi
+      - --enable-libgme
+      - --enable-libgsm
+      - --enable-libmp3lame
+      - --enable-libopenjpeg
+      - --enable-libopus
+      - --enable-libpulse
+      - --enable-librubberband
+      - --enable-libshine
+      - --enable-libsnappy
+      - --enable-libsoxr
+      - --enable-libspeex
+      - --enable-libssh
+      - --enable-libtheora
+      - --enable-libtwolame
+      - --enable-libvorbis
+      - --enable-libvpx
+      - --enable-libwavpack
+      - --enable-libwebp
+      - --enable-libx265
+      - --enable-libxvid
+      - --enable-libzmq
+      - --enable-libzvbi 
+      - --enable-omx
+      - --enable-openal
+      - --enable-opengl
+      - --enable-sdl2
+      - --enable-shared
+      - --disable-static
     build-packages:
       - git
       - g++
       - make
-      - yasm
       - autoconf
       - libtool
       - cmake
-      - pkg-config
       - automake
       - build-essential
+      - openssl
+      - flite1-dev
+      - frei0r-plugins-dev
+      - ladspa-sdk
       - libass-dev
+      - libbluray-dev
+      - libbs2b-dev
+      - libcaca-dev
+      - libcdio-paranoia-dev
+      - libchromaprint-dev
+      - libcrystalhd-dev
+      - libdc1394-22-dev
+      - libfontconfig1-dev
       - libfreetype6-dev
-      - libsdl1.2-dev
+      - libfribidi-dev
+      - libgl1-mesa-dev
+      - libgme-dev
+      - libgsm1-dev
+      - libleptonica-dev
+      - liblzma-dev
+      - libmp3lame-dev
+      - libnetcdf-dev
+      - libopenal-dev
+      - libomxil-bellagio-dev
+      - libopencore-amrnb-dev
+      - libopencore-amrwb-dev
+      - libopencv-imgproc-dev
+      - libopenjp2-7-dev
+      - libopus-dev
+      - libpulse-dev
+      - librubberband-dev
+      - libsctp-dev
+      - libsdl2-dev
+      - libshine-dev
+      - libsnappy-dev
+      - libsoxr-dev
+      - libspeex-dev
+      - libssh-gcrypt-dev
+      - libtesseract-dev
       - libtheora-dev
+      - libtwolame-dev
       - libva-dev
       - libvdpau-dev
+      - libvo-amrwbenc-dev
       - libvorbis-dev
-      - libxcb1-dev
-      - libxcb-shm0-dev
-      - libxcb-xfixes0-dev
-      - texinfo
-      - zlib1g-dev
-      - libx264-dev
-      - libmp3lame-dev
-      - libopus-dev
-      - libx265-dev
       - libvpx-dev
-      - openssl
-    stage-packages:
-      - libssl-dev
+      - libwavpack-dev
+      - libwebp-dev
+      - libx264-dev
+      - libx265-dev
+      - libxcb-shape0-dev
+      - libxv-dev
+      - libxvidcore-dev
+      - libxvmc-dev
+      - libzmq3-dev
+      - libzvbi-dev
+      - pkg-config
+      - texinfo
+      - nasm
+      - zlib1g-dev
     organize:
-      usr/local/bin: usr/bin
+      usr/local: usr/
+    # Exclude some junk from the final snap
+    prime:
+      - -usr/share/doc
+      - -usr/share/icons
+      - -usr/include
+      - -usr/doc
+      - -usr/man
