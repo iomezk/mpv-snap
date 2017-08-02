@@ -1,15 +1,149 @@
-name: my-snap-name # you probably want to 'snapcraft register <name>'
-version: '0.1' # just for humans, typically '1.2+git' or '1.3.2'
-summary: Single-line elevator pitch for your amazing snap # 79 char long summary
+name: mpv
+version: '0.26.0'
+summary: a free, open source, and cross-platform media player.
 description: |
-  This is my-snap's description. You have a paragraph or two to tell the
-  most important story about your snap. Keep it under 100 words though,
-  we live in tweetspace and your description wants to look good in the snap
-  store.
+  mpv is a media player based on MPlayer and mplayer2.
+  It supports a wide variety of video file formats,
+  audio and video codecs, and subtitle types.
+  Remember to connect this snap to the removable-media slot,
+  otherwise external media won't be accessible!
 
-confinement: devmode # use 'strict' once you have the right plugs and slots
+grade: stable
+confinement: strict
+
+apps:
+  mpv:
+    command: desktop-launch $SNAP/usr/local/bin/mpv
+    plugs: [x11, opengl, unity7, pulseaudio, home, network, removable-media, optical-drive]
 
 parts:
-  my-part:
-    # See 'snapcraft plugins'
-    plugin: nil
+  youtube-dl:
+    source: https://github.com/rg3/youtube-dl/archive/2017.07.30.1.tar.gz
+    plugin: python
+    python-version: python3
+    after: [ffmpeg]
+  mpv:
+    source: https://github.com/mpv-player/mpv/archive/v0.26.0.tar.gz
+    plugin: waf
+    prepare: |
+      ./bootstrap.py
+    stage-packages:
+      - libasound2
+      - libass5
+      - libatomic1
+      - libbluray1
+      - libc6
+      - libcdio-cdda1
+      - libcdio-paranoia1 
+      - libcdio13
+      - libdrm2
+      - libdvdnav4
+      - libdvdread4
+      - libegl1-mesa 
+      - libgbm1 
+      - libgl1-mesa-glx
+      - libjack-jackd2-0
+      - libjpeg8
+      - liblcms2-2
+      - liblua5.2-0
+      - libpulse0
+      - librubberband2v5
+      - libsdl2-2.0-0
+      - libsmbclient
+      - libsndio6.1
+      - libuchardet0
+      - libv4l-0
+      - libva-drm1 
+      - libva-wayland1
+      - libva-x11-1 
+      - libva1
+      - libvdpau1
+      - libwayland-client0 
+      - libwayland-cursor0
+      - libwayland-egl1-mesa 
+      - libx11-6
+      - libxext6
+      - libxinerama1
+      - libxkbcommon0
+      - libxrandr2
+      - libxss1
+      - libxv1
+      - zlib1g
+    build-packages:  
+      - build-essential
+      - libasound2-dev
+      - libass-dev
+      - libbluray-dev
+      - libcdio-paranoia-dev
+      - libdvdnav-dev
+      - libdvdread-dev
+      - libegl1-mesa-dev
+      - libenca-dev
+      - libgbm-dev
+      - libgl1-mesa-dev
+      - libguess-dev
+      - libjack-dev
+      - libjpeg-dev
+      - liblcms2-dev
+      - liblua5.2-dev
+      - libpulse-dev
+      - librubberband-dev
+      - libsdl2-dev
+      - libsmbclient-dev
+      - libsndio-dev
+      - libswscale-dev
+      - libuchardet-dev
+      - libv4l-dev
+      - libva-dev
+      - libvdpau-dev
+      - libwayland-dev
+      - libx11-dev
+      - libxinerama-dev
+      - libxkbcommon-dev
+      - libxrandr-dev
+      - libxss-dev
+      - libxv-dev
+      - pkg-config
+      - python
+      - python-docutils
+    after:
+      - desktop-glib-only
+      - ffmpeg
+
+  ffmpeg:
+    source: https://ffmpeg.org/releases/ffmpeg-3.3.3.tar.xz 
+    plugin: autotools
+    configflags: [--enable-gpl, --enable-libass, --enable-libfreetype, --enable-libmp3lame, --enable-libopus, --enable-libtheora, --enable-libvorbis, --enable-libvpx, --enable-libx264, --enable-libx265, --enable-openssl, --enable-nonfree]
+    build-packages:
+      - git
+      - g++
+      - make
+      - yasm
+      - autoconf
+      - libtool
+      - cmake
+      - pkg-config
+      - automake
+      - build-essential
+      - libass-dev
+      - libfreetype6-dev
+      - libsdl1.2-dev
+      - libtheora-dev
+      - libva-dev
+      - libvdpau-dev
+      - libvorbis-dev
+      - libxcb1-dev
+      - libxcb-shm0-dev
+      - libxcb-xfixes0-dev
+      - texinfo
+      - zlib1g-dev
+      - libx264-dev
+      - libmp3lame-dev
+      - libopus-dev
+      - libx265-dev
+      - libvpx-dev
+      - openssl
+    stage-packages:
+      - libssl-dev
+    organize:
+      usr/local/bin: usr/bin
