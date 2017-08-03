@@ -37,15 +37,15 @@ so mpv can authoritatively publish future releases.
   - [X] Rename the forked Snapcrafters template repository
   - [X] Update logos and references to `[Project]` and `[my-snap-name]`
   - [X] Create a snap that runs in `devmode`
-  - [ ] Register the snap in the store, **using the preferred upstream name**
+  - [X] Register the snap in the store, **using the preferred upstream name**
   - [X] Add a screenshot to this `README.md`
-  - [ ] Publish the `devmode` snap in the Snap store edge channel
+  - [X] Publish the `devmode` snap in the Snap store edge channel
   - [X] Add install instructions to this `README.md`
   - [ ] Update snap store metadata, icons and screenshots
   - [X] Convert the snap to `strict` confinement, or `classic` confinement if it qualifies
-  - [ ] Publish the confined snap in the Snap store beta channel
-  - [ ] Update the install instructions in this `README.md`
-  - [ ] Post a call for testing on the [Snapcraft Forum](https://forum.snapcraft.io) - [link]()
+  - [X] Publish the confined snap in the Snap store beta channel
+  - [X] Update the install instructions in this `README.md`
+  - [X] Post a call for testing on the [Snapcraft Forum](https://forum.snapcraft.io) - [link]()
   - [ ] Ask a [Snapcrafters admin](https://github.com/orgs/snapcrafters/people?query=%20role%3Aowner) to fork your repo into github.com/snapcrafters, transfer the snap name from you to snapcrafters, and configure the repo for automatic publishing into edge on commit
   - [ ] Add the provided Snapcraft build badge to this `README.md`
   - [ ] Publish the snap in the Snap store stable channel
