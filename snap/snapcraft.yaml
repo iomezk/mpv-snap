@@ -1,5 +1,5 @@
 name: mpv
-version: '0.26.0'
+version: '0.27.0'
 summary: a free, open source, and cross-platform media player.
 description: |
   mpv is a media player based on MPlayer and mplayer2.
@@ -24,7 +24,7 @@ parts:
     after: [ffmpeg]
 
   mpv:
-    source: https://github.com/mpv-player/mpv/archive/v0.26.0.tar.gz
+    source: https://github.com/mpv-player/mpv/archive/v0.27.0.tar.gz
     plugin: waf
     configflags:
       - --enable-cdda
@@ -92,10 +92,11 @@ parts:
       - libdvdread-dev
       - libegl1-mesa-dev
       - libenca-dev
+      - libfdk-aac-dev
       - libgbm-dev
       - libgl1-mesa-dev
       - libguess-dev
-      - libjack-dev
+      # - libjack-dev
       - libjpeg-dev
       - liblcms2-dev
       - liblua5.2-dev
@@ -112,6 +113,7 @@ parts:
       - libvdpau-dev
       - libwayland-dev
       - libx11-dev
+      - libx264-dev
       - libxinerama-dev
       - libxkbcommon-dev
       - libxrandr-dev
@@ -170,6 +172,8 @@ parts:
       - --enable-libvpx
       - --enable-libwavpack
       - --enable-libwebp
+      - --enable-libx264
+      - --enable-libfdk-aac
       - --enable-libx265
       - --enable-libxvid
       - --enable-libzmq
