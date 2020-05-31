@@ -23,19 +23,19 @@ apps:
       VAPOURSYNTH_PLUGIN_PATH: $SNAP/lib/vapoursynth
     # command: desktop-launch $SNAP/usr/bin/mpv
     command: ./usr/bin/mpv
-    plugs:
-      - home
-      - network
-      - opengl
-      - optical-drive
-      - pulseaudio
-      - removable-media
-      - unity7
-      - x11
-      # allow access to ~/.config/mpv
-      # - config-mpv
-      # allow access to system fonts
-      - desktop
+    # plugs:
+    #   - home
+    #   - network
+    #   - opengl
+    #   - optical-drive
+    #   - pulseaudio
+    #   - removable-media
+    #   - unity7
+    #   - x11
+    #   # allow access to ~/.config/mpv
+    #   # - config-mpv
+    #   # allow access to system fonts
+    #   - desktop
 
 # plugs:
 #   config-mpv:
