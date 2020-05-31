@@ -1,5 +1,6 @@
+base: core18
 name: mpv
-version: '0.27.0'
+version: '0.29.1-nilsboy1'
 summary: a free, open source, and cross-platform media player.
 description: |
   mpv is a media player based on MPlayer and mplayer2.
@@ -16,10 +17,130 @@ apps:
     environment:
       # directory where vapoursynth plugins should reside
       VAPOURSYNTH_PLUGIN_PATH: $SNAP/lib/vapoursynth
-    command: desktop-launch $SNAP/usr/bin/mpv
-    plugs: [x11, opengl, unity7, pulseaudio, home, network, removable-media, optical-drive]
+    # command: desktop-launch $SNAP/usr/bin/mpv
+    command: ./usr/bin/mpv
+    plugs:
+      - home
+      - network
+      - opengl
+      - optical-drive
+      - pulseaudio
+      - removable-media
+      - unity7
+      - x11
+      # allow access to ~/.config/mpv
+      - config-mpv
+      # allow access to system fonts
+      - desktop
+
+plugs:
+  config-mpv:
+    interface: personal-files
+    write:
+      - $HOME/.config/mpv
 
 parts:
+  packages:
+    plugin:
+      autotools
+    source: ./
+    override-build: |
+      true
+    stage-packages:
+      - libharfbuzz0b
+      - libx265-146
+      - libx264-152
+      - libssh-4
+      - libsnappy1v5
+      - libgsm1
+      - libfreetype6
+      - libfontconfig1
+      - samba-libs
+      - libpython3.6
+      - libsmbclient
+      - libgl1
+      - libglu1-mesa
+      - libglx0
+      - libglvnd0
+      - libsdl2-2.0-0
+      - libxcursor1
+      - libxi6
+      - libxxf86vm1
+      - libslang2
+      - libwayland-egl1
+      - libegl1
+      - liblua5.2-0
+      - liblcms2-2
+      - libfftw3-3
+      - libasound2
+      - libass9
+      - libatomic1
+      - libbluray2
+      - libbs2b0
+      - libcaca0
+      - libcdio-cdda2
+      - libcdio-paranoia2
+      - libcdio17
+      - libchromaprint1
+      - libcrystalhd3
+      - libdrm2
+      - libdvdnav4
+      - libdvdread4
+      - libegl-mesa0
+      - libenca0
+      - libfdk-aac1
+      - libflite1
+      - libfribidi0
+      - libgbm1
+      - libgme0
+      - libguess1
+      - libjack0
+      - libjpeg62
+      - libjpeg8
+      - libjpeg9
+      - liblzma5
+      - libmp3lame0
+      - libnetcdf13
+      - libomxil-bellagio0
+      - libopenal1
+      - libopencore-amrnb0
+      - libopencore-amrwb0
+      - libopus0
+      - libpulse0
+      - librubberband2
+      - libsctp1
+      - libshine3
+      - libsodium23
+      - libsoxr0
+      - libspeex1
+      - libssh-gcrypt-4
+      - libswscale4
+      - libtesseract4
+      - libtheora0
+      - libtwolame0
+      - libuchardet0
+      - libva-drm2
+      - libva-wayland2
+      - libva2
+      - libvdpau1
+      - libvo-amrwbenc0
+      - libvpx5
+      - libwavpack1
+      - libwayland-client0
+      - libwayland-cursor0
+      - libwebp6
+      - libxcb-shape0
+      - libxext6
+      - libxinerama1
+      - libxkbcommon0
+      - libxrandr2
+      - libxss1
+      - libxv1
+      - libxvidcore4
+      - libxvmc1
+      - libzmq5
+      - libzvbi0
+
   youtube-dl:
     source: https://github.com/rg3/youtube-dl/archive/2017.07.30.1.tar.gz
     plugin: python
@@ -27,66 +148,23 @@ parts:
     after: [ffmpeg]
 
   mpv:
-    source: https://github.com/mpv-player/mpv/archive/v0.27.0.tar.gz
+    source: https://github.com/mpv-player/mpv/archive/v0.29.1.tar.gz
     plugin: waf
     configflags:
       - --enable-cdda
       - --enable-dvdnav
       - --enable-dvdread
-      - --enable-encoding
+      # - --enable-encoding
       - --enable-libmpv-shared
       - --disable-static-build
-      - --enable-libsmbclient
-      - --enable-lua
+      # - --enable-libsmbclient
       - --disable-build-date
-    prepare: |
+    override-build: |
       ./bootstrap.py
-    stage-packages:
-      - lua5.2
-      - libasound2
-      - libass5
-      - libatomic1
-      - libbluray1
-      - libc6
-      - libcdio-cdda1
-      - libcdio-paranoia1 
-      - libcdio13
-      - libdrm2
-      - libdvdnav4
-      - libdvdread4
-      - libegl1-mesa 
-      - libgbm1 
-      - libgl1-mesa-glx
-      - libjack-jackd2-0
-      - libjpeg8
-      - liblcms2-2
-      - liblua5.2-0
-      - libpulse0
-      - librubberband2v5
-      - libsdl2-2.0-0
-      - libsmbclient
-      - libsndio6.1
-      - libuchardet0
-      - libv4l-0
-      - libva-drm1 
-      - libva-wayland1
-      - libva-x11-1 
-      - libva1
-      - libvdpau1
-      - libwayland-client0 
-      - libwayland-cursor0
-      - libwayland-egl1-mesa 
-      - libx11-6
-      - libxext6
-      - libxinerama1
-      - libxkbcommon0
-      - libxrandr2
-      - libxss1
-      - libxv1
-      - zlib1g
-      - libsodium18
+      snapcraftctl build
     build-packages:  
       - build-essential
+      - libharfbuzz-dev
       - libasound2-dev
       - libass-dev
       - libbluray-dev
@@ -107,7 +185,7 @@ parts:
       - librubberband-dev
       - libsdl2-dev
       - libssl-dev
-      - libsmbclient-dev
+      # - libsmbclient-dev
       - libsndio-dev
       - libswscale-dev
       - libuchardet-dev
@@ -125,6 +203,7 @@ parts:
       - pkg-config
       - python
       - python-docutils
+      - libpulse0
     after:
       - desktop-glib-only
       - ffmpeg
@@ -140,7 +219,7 @@ parts:
       - -usr/man
 
   ffmpeg:
-    source: https://ffmpeg.org/releases/ffmpeg-3.3.3.tar.xz 
+    source: https://github.com/FFmpeg/FFmpeg.git
     plugin: autotools
     configflags:
       - --enable-gpl
@@ -255,7 +334,7 @@ parts:
       - libzvbi-dev
       - pkg-config
       - texinfo
-      - nasm
+      # - nasm
       - zlib1g-dev
     organize:
       usr/local: usr/
@@ -269,10 +348,11 @@ parts:
 
   vapoursynth:
     # NOTE: Releases R36 and R37 seem to have errors
-    source: https://github.com/vapoursynth/vapoursynth/archive/R35.tar.gz
-    # replace hardcoded vapoursynth plugin directory with snap version
-    prepare: |
-        perl -pi -007e 's/\Qstd::string systemPluginDir(tmp ? tmp : VS_PATH_PLUGINDIR);\E/const char *snapPluginDir = getenv("VAPOURSYNTH_PLUGIN_PATH");\nstd::string systemPluginDir(snapPluginDir);\n/gms' src/core/vscore.cpp
+    source: ./dep/vapoursynth-R35.tar.gz
+    # replace hardcoded vapoursynth plugin directory with snap one
+    override-build: |
+      perl -pi -007e 's/\Qstd::string systemPluginDir(tmp ? tmp : VS_PATH_PLUGINDIR);\E/const char *snapPluginDir = getenv("VAPOURSYNTH_PLUGIN_PATH");\nstd::string systemPluginDir(snapPluginDir);\n/gms' src/core/vscore.cpp
+      snapcraftctl build
     plugin: autotools
     configflags:
       - --disable-ocr
@@ -292,12 +372,27 @@ parts:
     after:
       - zimg
 
+  # # for base: core only:
+  # # this release of vapoursynth-mvtools needs newer version than from 16.04
+  # nasm:
+  #   source: ./dep/nasm-74246c4.tar.gz
+  #   plugin: autotools
+  #   override-build: |
+  #     sh autogen.sh
+  #     sh configure
+  #     make
+  #     # does not work because of missing man files
+  #     # make install
+  #     /usr/bin/install -c nasm /usr/bin/nasm
+
   vapoursynth-mvtools:
     source: git://github.com/dubhater/vapoursynth-mvtools.git
-    plugin: autotools
-    install: |
-      mkdir $SNAPCRAFT_PART_INSTALL/lib/vapoursynth/
-      mv $SNAPCRAFT_PART_INSTALL/lib/libmvtools* $SNAPCRAFT_PART_INSTALL/lib/vapoursynth/
+    # plugin: autotools
+    plugin: meson
+    override-build: |
+      snapcraftctl build
+      mkdir -p $SNAPCRAFT_PART_INSTALL/lib/vapoursynth/
+      cp $SNAPCRAFT_PART_INSTALL/usr/local/lib/x86_64-linux-gnu/* $SNAPCRAFT_PART_INSTALL/lib/vapoursynth/
     build-packages:
       - git
       - g++
@@ -308,11 +403,14 @@ parts:
       - automake
       - build-essential
       - libfftw3-dev
+      - nasm
     after:
+      # - nasm
       - vapoursynth
 
   zimg:
-    source: git://github.com/sekrit-twc/zimg.git
+    source: ./dep/zimg-release-2.8.tar.gz
+    # source: git://github.com/sekrit-twc/zimg.git
     plugin: autotools
     configflags:
       - --enable-x86simd
@@ -334,3 +432,13 @@ parts:
       - -usr/include
       - -usr/doc
       - -usr/man
+
+  desktop-glib-only:
+    build-packages:
+    - libglib2.0-dev
+    plugin: make
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: glib-only
+    stage-packages:
+    - libglib2.0-bin
+
