@@ -9,9 +9,9 @@ description: |
   Remember to connect this snap to the removable-media slot,
   otherwise external media won't be accessible!
 
-architectures:
-  build-on: i386
-  run-on: i386
+# architectures:
+#   - build-on: i386
+#     run-on: i386
 grade: stable
 confinement: strict
 
@@ -143,6 +143,7 @@ parts:
       - libxvmc1
       - libzmq5
       - libzvbi0
+      - libglut.so.3
 
   youtube-dl:
     source: https://github.com/rg3/youtube-dl/archive/2017.07.30.1.tar.gz
@@ -207,6 +208,108 @@ parts:
       - python
       - python-docutils
       - libpulse0
+      - libasound2
+      - libass9
+      - libasyncns0
+      - libbluray2
+      - libbs2b0
+      - libcaca0
+      - libcairo2
+      - libcdio-cdda2
+      - libcdio-paranoia2
+      - libcdio17
+      - libcrystalhd3
+      - libdrm2
+      - libdvdnav4
+      - libdvdread4
+      - libegl1
+      - libfdk-aac1
+      - libfftw3-double3
+      - libflac8
+      - libflite1
+      - libfontconfig1
+      - libfreetype6
+      - libfribidi0
+      - libgbm1
+      - libgl1
+      - libglvnd0
+      - libglx0
+      - libgme0
+      - libgomp1
+      - libgraphite2-3
+      - libgsm1
+      - libharfbuzz0b
+      - libicu60
+      - libjack0
+      - libjpeg-turbo8
+      - liblcms2-2
+      - liblua5.2-0
+      - libmp3lame0
+      - libnorm1
+      - libnuma1
+      - libogg0
+      - libopenal1
+      - libopenjp2-7
+      - libopus0
+      - libpgm-5.2-0
+      - libpixman-1-0
+      - libpng16-16
+      - libpulse0
+      - libpython3.6
+      - librubberband2
+      - libsamplerate0
+      - libsdl2-2.0-0
+      - libshine3
+      - libslang2
+      - libsnappy1v5
+      - libsndfile1
+      - libsndio6.1
+      - libsodium23
+      - libsoxr0
+      - libspeex1
+      - libssh-gcrypt-4
+      - libtheora0
+      - libtwolame0
+      - libuchardet0
+      - libva-drm2
+      - libva-x11-2
+      - libva2
+      - libvdpau1
+      - libvorbis0a
+      - libvorbisenc2
+      - libvpx5
+      - libwavpack1
+      - libwayland-client0
+      - libwayland-cursor0
+      - libwayland-egl1
+      - libwayland-server0
+      - libwebp6
+      - libwebpmux3
+      - libx11-6
+      - libx264-152
+      - libx265-146
+      - libxau6
+      - libxcb-render0
+      - libxcb-shape0
+      - libxcb-shm0
+      - libxcb-xfixes0
+      - libxcb1
+      - libxcursor1
+      - libxdmcp6
+      - libxext6
+      - libxfixes3
+      - libxi6
+      - libxinerama1
+      - libxkbcommon0
+      - libxml2
+      - libxrandr2
+      - libxrender1
+      - libxss1
+      - libxv1
+      - libxvidcore4
+      - libxxf86vm1
+      - libzmq5
+      - libzvbi0
     after:
       - desktop-glib-only
       - ffmpeg
@@ -229,7 +332,8 @@ parts:
       - --enable-openssl
       - --enable-nonfree
       - --enable-avresample
-      - --enable-avisynth
+      # TODO: install headers for avisynth - got removed from ffmpeg master?:
+      # - --enable-avisynth
       - --enable-ladspa
       - --enable-libass
       - --enable-libbluray
@@ -339,6 +443,97 @@ parts:
       - texinfo
       # - nasm
       - zlib1g-dev
+      - libasound2
+      - libass9
+      - libasyncns0
+      - libbluray2
+      - libbs2b0
+      - libcaca0
+      - libcairo2
+      - libcdio-cdda2
+      - libcdio-paranoia2
+      - libcdio17
+      - libcrystalhd3
+      - libdrm2
+      - libfdk-aac1
+      - libfftw3-double3
+      - libflac8
+      - libflite1
+      - libfontconfig1
+      - libfreetype6
+      - libfribidi0
+      - libgl1
+      - libglvnd0
+      - libglx0
+      - libgme0
+      - libgomp1
+      - libgraphite2-3
+      - libgsm1
+      - libharfbuzz0b
+      - libicu60
+      - libmp3lame0
+      - libnorm1
+      - libnuma1
+      - libogg0
+      - libopenal1
+      - libopenjp2-7
+      - libopus0
+      - libpgm-5.2-0
+      - libpixman-1-0
+      - libpng16-16
+      - libpulse0
+      - librubberband2
+      - libsamplerate0
+      - libsdl2-2.0-0
+      - libshine3
+      - libslang2
+      - libsnappy1v5
+      - libsndfile1
+      - libsndio6.1
+      - libsodium23
+      - libsoxr0
+      - libspeex1
+      - libssh-gcrypt-4
+      - libtheora0
+      - libtwolame0
+      - libva-drm2
+      - libva-x11-2
+      - libva2
+      - libvdpau1
+      - libvorbis0a
+      - libvorbisenc2
+      - libvpx5
+      - libwavpack1
+      - libwayland-client0
+      - libwayland-cursor0
+      - libwayland-egl1
+      - libwebp6
+      - libwebpmux3
+      - libx11-6
+      - libx264-152
+      - libx265-146
+      - libxau6
+      - libxcb-render0
+      - libxcb-shape0
+      - libxcb-shm0
+      - libxcb-xfixes0
+      - libxcb1
+      - libxcursor1
+      - libxdmcp6
+      - libxext6
+      - libxfixes3
+      - libxi6
+      - libxinerama1
+      - libxkbcommon0
+      - libxml2
+      - libxrandr2
+      - libxrender1
+      - libxss1
+      - libxv1
+      - libxvidcore4
+      - libxxf86vm1
+      - libzmq5
+      - libzvbi0
     organize:
       usr/local: usr/
     # Exclude some junk from the final snap
@@ -351,7 +546,9 @@ parts:
 
   vapoursynth:
     # NOTE: Releases R36 and R37 seem to have errors
-    source: ./dep/vapoursynth-R35.tar.gz
+    # source: ./dep/vapoursynth-R35.tar.gz
+    source: https://github.com/vapoursynth/vapoursynth.git
+    source-tag: R35
     # replace hardcoded vapoursynth plugin directory with snap one
     override-build: |
       perl -pi -007e 's/\Qstd::string systemPluginDir(tmp ? tmp : VS_PATH_PLUGINDIR);\E/const char *snapPluginDir = getenv("VAPOURSYNTH_PLUGIN_PATH");\nstd::string systemPluginDir(snapPluginDir);\n/gms' src/core/vscore.cpp
@@ -370,6 +567,7 @@ parts:
       - automake
       - build-essential
       - yasm
+      - libpython3.6
     organize:
       usr/local/lib: usr/lib
     after:
