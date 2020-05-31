@@ -1,3 +1,5 @@
+[![Snap Status](https://build.snapcraft.io/badge/nilsboy/mpv.svg)](https://build.snapcraft.io/user/nilsboy/mpv)
+
 <h1 align="center">
   <img src="mpv_logo.png" alt="mpv">
   <br />

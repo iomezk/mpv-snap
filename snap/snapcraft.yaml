@@ -10,7 +10,7 @@ description: |
   otherwise external media won't be accessible!
 
 grade: stable
-confinement: strict
+confinement: classic
 
 architectures:
   - build-on: amd64
