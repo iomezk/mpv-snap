@@ -295,7 +295,7 @@ parts:
       - libxvmc1
       - libzmq5
       - libzvbi0
-      - freeglut
+      - freeglut3
     after:
       - desktop-glib-only
       - ffmpeg
@@ -593,7 +593,7 @@ parts:
       - libxvidcore4
       - libzmq5
       - libzvbi0
-      - freeglut
+      - freeglut3
     organize:
       usr/local: usr/
 
