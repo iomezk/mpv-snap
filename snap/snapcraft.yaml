@@ -409,8 +409,8 @@ parts:
       - vapoursynth
 
   zimg:
-    source: ./dep/zimg-release-2.8.tar.gz
-    # source: git://github.com/sekrit-twc/zimg.git
+    # source: ./dep/zimg-release-2.8.tar.gz
+    source: git://github.com/sekrit-twc/zimg.git
     plugin: autotools
     configflags:
       - --enable-x86simd
