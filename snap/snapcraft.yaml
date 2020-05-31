@@ -29,15 +29,15 @@ apps:
       - unity7
       - x11
       # allow access to ~/.config/mpv
-      - config-mpv
+      # - config-mpv
       # allow access to system fonts
       - desktop
 
-plugs:
-  config-mpv:
-    interface: personal-files
-    write:
-      - $HOME/.config/mpv
+# plugs:
+#   config-mpv:
+#     interface: personal-files
+#     write:
+#       - $HOME/.config/mpv
 
 parts:
   mpv:
@@ -291,6 +291,7 @@ parts:
       - libxvmc1
       - libzmq5
       - libzvbi0
+      - freeglut
     after:
       - desktop-glib-only
       - ffmpeg
@@ -583,6 +584,12 @@ parts:
       - libxcb-shm0
       - libxcb-xfixes0
       - libxcb1
+      - libglu1-mesa
+      - libxv1
+      - libxvidcore4
+      - libzmq5
+      - libzvbi0
+      - freeglut
     organize:
       usr/local: usr/
 
