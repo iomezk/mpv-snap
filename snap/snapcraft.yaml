@@ -9,6 +9,9 @@ description: |
   Remember to connect this snap to the removable-media slot,
   otherwise external media won't be accessible!
 
+architectures:
+  - build-on: i386
+  - run-on: i386
 grade: stable
 confinement: strict
 
