@@ -1,5 +1,5 @@
 base: core18
-name: mpv
+name: mpv-nilsboy
 version: '0.29.1-nilsboy1'
 summary: a free, open source, and cross-platform media player.
 description: |
