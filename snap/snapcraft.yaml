@@ -14,7 +14,7 @@ description: |
   sudo snap install --edge mpv-nilsboy --devmode
 
 grade: devel
-confinement: classic
+confinement: devmode
 
 architectures:
   - build-on: amd64
