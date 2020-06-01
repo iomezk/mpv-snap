@@ -687,8 +687,8 @@ parts:
       - libglib2.0-bin
 
   youtube-dl:
-    source: https://github.com/rg3/youtube-dl/archive/2017.07.30.1.tar.gz
-    # source-depth: 1
+    source: https://github.com/rg3/youtube-dl.git
+    source-depth: 1
     plugin: python
     python-version: python3
     after: 
