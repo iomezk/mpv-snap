@@ -1,14 +1,17 @@
 base: core18
 name: mpv-nilsboy
-version: "0.32.0-nilsboy1"
+version: "0.32.0-master"
 summary: a free, open source, and cross-platform media player.
 icon: snap/gui/mpv.svg
 description: |
   mpv is a media player based on MPlayer and mplayer2.
   It supports a wide variety of video file formats,
   audio and video codecs, and subtitle types.
-  Remember to connect this snap to the removable-media slot,
-  otherwise external media won't be accessible!
+
+  This version features a motion compensation option via vapoursynth.
+
+  Install with:
+  sudo snap install --edge mpv-nilsboy --devmode
 
 grade: devel
 confinement: classic
@@ -24,19 +27,19 @@ apps:
       VAPOURSYNTH_PLUGIN_PATH: $SNAP/lib/vapoursynth
     # command: desktop-launch $SNAP/usr/bin/mpv
     command: ./usr/bin/mpv
-    # plugs:
-    #   - home
-    #   - network
-    #   - opengl
-    #   - optical-drive
-    #   - pulseaudio
-    #   - removable-media
-    #   - unity7
-    #   - x11
-    #   # allow access to ~/.config/mpv
-    #   # - config-mpv
-    #   # allow access to system fonts
-    #   - desktop
+    plugs:
+      - home
+      - network
+      - opengl
+      - optical-drive
+      - pulseaudio
+      - removable-media
+      - unity7
+      - x11
+      # allow access to ~/.config/mpv
+      # - config-mpv
+      # allow access to system fonts
+      - desktop
 
 # plugs:
 #   config-mpv:
@@ -51,7 +54,7 @@ parts:
     configflags:
       - --enable-cdda
       - --enable-dvdnav
-      - --enable-dvdread
+      # - --enable-dvdread
       # - --enable-encoding
       - --enable-libmpv-shared
       - --disable-static-build
