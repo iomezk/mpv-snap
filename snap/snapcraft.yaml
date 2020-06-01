@@ -27,19 +27,19 @@ apps:
       VAPOURSYNTH_PLUGIN_PATH: $SNAP/lib/vapoursynth
     # command: desktop-launch $SNAP/usr/bin/mpv
     command: ./usr/bin/mpv
-    plugs:
-      - home
-      - network
-      - opengl
-      - optical-drive
-      - pulseaudio
-      - removable-media
-      - unity7
-      - x11
-      # allow access to ~/.config/mpv
-      # - config-mpv
-      # allow access to system fonts
-      - desktop
+    # plugs:
+    #   - home
+    #   - network
+    #   - opengl
+    #   - optical-drive
+    #   - pulseaudio
+    #   - removable-media
+    #   - unity7
+    #   - x11
+    #   # allow access to ~/.config/mpv
+    #   # - config-mpv
+    #   # allow access to system fonts
+    #   - desktop
 
 # plugs:
 #   config-mpv:
@@ -50,6 +50,7 @@ apps:
 parts:
   mpv:
     source: https://github.com/mpv-player/mpv.git
+    source-depth: 1
     plugin: waf
     configflags:
       - --enable-cdda
@@ -309,6 +310,7 @@ parts:
 
   ffmpeg:
     source: https://github.com/FFmpeg/FFmpeg.git
+    source-depth: 1
     plugin: autotools
     configflags:
       - --enable-gpl
@@ -604,6 +606,7 @@ parts:
   vapoursynth:
     # NOTE: Releases R36 and R37 seem to have errors
     source: https://github.com/vapoursynth/vapoursynth.git
+    source-depth: 1
     source-tag: R35
     # replace hardcoded vapoursynth plugin directory with snap one
     override-build: |
@@ -619,7 +622,7 @@ parts:
       - autoconf
       - libtool
       - cmake
-      - cython
+      - cython3
       - automake
       - build-essential
       - yasm
@@ -633,6 +636,7 @@ parts:
 
   vapoursynth-mvtools:
     source: git://github.com/dubhater/vapoursynth-mvtools.git
+    source-depth: 1
     plugin: meson
     override-build: |
       snapcraftctl build
@@ -653,7 +657,10 @@ parts:
       - vapoursynth
 
   zimg:
-    source: git://github.com/sekrit-twc/zimg.git
+    source: https://github.com/sekrit-twc/zimg.git
+    source-depth: 1
+    # need by vapoursynth (2020-06-01)
+    source-branch: v2.9
     plugin: autotools
     configflags:
       - --enable-x86simd
@@ -674,12 +681,14 @@ parts:
       - libglib2.0-dev
     plugin: make
     source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-depth: 1
     source-subdir: glib-only
     stage-packages:
       - libglib2.0-bin
 
   youtube-dl:
     source: https://github.com/rg3/youtube-dl/archive/2017.07.30.1.tar.gz
+    source-depth: 1
     plugin: python
     python-version: python3
     after: 
