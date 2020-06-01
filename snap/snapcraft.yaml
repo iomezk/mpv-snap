@@ -2,6 +2,7 @@ base: core18
 name: mpv-nilsboy
 version: "0.29.1-nilsboy1"
 summary: a free, open source, and cross-platform media player.
+icon: gui/mpv.svg
 description: |
   mpv is a media player based on MPlayer and mplayer2.
   It supports a wide variety of video file formats,
@@ -9,7 +10,7 @@ description: |
   Remember to connect this snap to the removable-media slot,
   otherwise external media won't be accessible!
 
-grade: stable
+grade: devel
 confinement: classic
 
 architectures:
@@ -45,7 +46,7 @@ apps:
 
 parts:
   mpv:
-    source: https://github.com/mpv-player/mpv/archive/v0.29.1.tar.gz
+    source: https://github.com/mpv-player/mpv.git
     plugin: waf
     configflags:
       - --enable-cdda
