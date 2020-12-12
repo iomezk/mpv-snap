@@ -33,6 +33,7 @@ apps:
       LIBVA_DRIVERS_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
     # command: desktop-launch $SNAP/usr/bin/mpv
     command: ./usr/bin/mpv
+    # TODO: vainfo vdpauinfo
     plugs:
       - home
       - network
@@ -223,6 +224,7 @@ parts:
       - libvdpau-va-gl1
       - mesa-vdpau-drivers
       - vdpauinfo
+      - vainfo
       - libuchardet0
       - libharfbuzz0b
       - libx265-146
@@ -318,9 +320,9 @@ parts:
       - libzvbi0
       - freeglut3
     after:
-      - desktop-glib-only
+      # - desktop-glib-only
       - ffmpeg
-      - vapoursynth
+      # - vapoursynth
       # - libvdpau-va-gl
     organize:
       usr/local: usr/
@@ -621,93 +623,94 @@ parts:
     organize:
       usr/local: usr/
 
-  vapoursynth:
-    # NOTE: Releases R36 and R37 seem to have errors
-    source: https://github.com/vapoursynth/vapoursynth.git
-    source-depth: 1
-    source-tag: R35
-    # replace hardcoded vapoursynth plugin directory with snap one
-    override-build: |
-      perl -pi -007e 's/\Qstd::string systemPluginDir(tmp ? tmp : VS_PATH_PLUGINDIR);\E/const char *snapPluginDir = getenv("VAPOURSYNTH_PLUGIN_PATH");\nstd::string systemPluginDir(snapPluginDir);\n/gms' src/core/vscore.cpp
-      snapcraftctl build
-    plugin: autotools
-    configflags:
-      - --disable-ocr
-    build-packages:
-      - git
-      - g++
-      - make
-      - autoconf
-      - libtool
-      - cmake
-      - cython3
-      - automake
-      - build-essential
-      - yasm
-      - libpython3.6
-    stage-packages:
-      - libpython3.6
-    organize:
-      usr/local/lib: usr/lib
-    after:
-      - zimg
+  # vapoursynth:
+  #   # NOTE: Releases R36 and R37 seem to have errors
+  #   source: https://github.com/vapoursynth/vapoursynth.git
+  #   source-depth: 1
+  #   source-tag: R35
+  #   # replace hardcoded vapoursynth plugin directory with snap one
+  #   override-build: |
+  #     perl -pi -007e 's/\Qstd::string systemPluginDir(tmp ? tmp : VS_PATH_PLUGINDIR);\E/const char *snapPluginDir = getenv("VAPOURSYNTH_PLUGIN_PATH");\nstd::string systemPluginDir(snapPluginDir);\n/gms' src/core/vscore.cpp
+  #     snapcraftctl build
+  #   plugin: autotools
+  #   configflags:
+  #     - --disable-ocr
+  #   build-packages:
+  #     - git
+  #     - g++
+  #     - make
+  #     - autoconf
+  #     - libtool
+  #     - cmake
+  #     - cython3
+  #     - automake
+  #     - build-essential
+  #     - yasm
+  #     - libpython3.6
+  #   stage-packages:
+  #     - libpython3.6
+  #   organize:
+  #     usr/local/lib: usr/lib
+  #   after:
+  #     - zimg
 
-  vapoursynth-mvtools:
-    source: git://github.com/dubhater/vapoursynth-mvtools.git
-    source-depth: 1
-    plugin: meson
-    override-build: |
-      snapcraftctl build
-      mkdir -pv $SNAPCRAFT_PART_INSTALL/lib/vapoursynth/
-      cp $SNAPCRAFT_PART_INSTALL/usr/local/lib/x86_64-linux-gnu/* $SNAPCRAFT_PART_INSTALL/lib/vapoursynth/
-    build-packages:
-      - git
-      - g++
-      - make
-      - autoconf
-      - libtool
-      - cmake
-      - automake
-      - build-essential
-      - libfftw3-dev
-      - nasm
-    after:
-      - vapoursynth
+  # vapoursynth-mvtools:
+  #   source: git://github.com/dubhater/vapoursynth-mvtools.git
+  #   source-depth: 1
+  #   plugin: meson
+  #   override-build: |
+  #     snapcraftctl build
+  #     mkdir -pv $SNAPCRAFT_PART_INSTALL/lib/vapoursynth/
+  #     cp $SNAPCRAFT_PART_INSTALL/usr/local/lib/x86_64-linux-gnu/* $SNAPCRAFT_PART_INSTALL/lib/vapoursynth/
+  #   build-packages:
+  #     - git
+  #     - g++
+  #     - make
+  #     - autoconf
+  #     - libtool
+  #     - cmake
+  #     - automake
+  #     - build-essential
+  #     - libfftw3-dev
+  #     - nasm
+  #   after:
+  #     - vapoursynth
 
-  zimg:
-    source: https://github.com/sekrit-twc/zimg.git
-    source-depth: 1
-    # need by vapoursynth (2020-06-01)
-    source-branch: v2.9
-    plugin: autotools
-    configflags:
-      - --enable-x86simd
-    build-packages:
-      - git
-      - g++
-      - make
-      - autoconf
-      - libtool
-      - cmake
-      - automake
-      - build-essential
-    organize:
-      usr/local: usr/
+  # zimg:
+  #   source: https://github.com/sekrit-twc/zimg.git
+  #   source-depth: 1
+  #   # need by vapoursynth (2020-06-01)
+  #   source-branch: v2.9
+  #   plugin: autotools
+  #   configflags:
+  #     - --enable-x86simd
+  #   build-packages:
+  #     - git
+  #     - g++
+  #     - make
+  #     - autoconf
+  #     - libtool
+  #     - cmake
+  #     - automake
+  #     - build-essential
+  #   organize:
+  #     usr/local: usr/
 
-  desktop-glib-only:
-    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-    source-subdir: glib-only
-    plugin: make
-    build-packages:
-      - libglib2.0-dev
-    stage-packages:
-      - libglib2.0-bin
+  # desktop-glib-only:
+  #   source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+  #   source-depth: 1
+  #   source-subdir: glib-only
+  #   plugin: make
+  #   build-packages:
+  #     - libglib2.0-dev
+  #   stage-packages:
+  #     - libglib2.0-bin
 
-  youtube-dl:
-    source: https://github.com/rg3/youtube-dl.git
-    source-depth: 1
-    plugin: python
-    python-version: python3
-    after:
-      - ffmpeg
+  # youtube-dl:
+  #   source: https://github.com/rg3/youtube-dl.git
+  #   source-depth: 1
+  #   plugin: python
+  #   python-version: python3
+  #   after:
+  #     - ffmpeg
 
