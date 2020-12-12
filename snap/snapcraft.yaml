@@ -344,7 +344,8 @@ parts:
       - --enable-libtwolame
       - --enable-libvorbis
       - --enable-libvpx
-      - --enable-libwavpack
+      # unknown option (2020-12-12)
+      # - --enable-libwavpack
       - --enable-libwebp
       - --enable-libx264
       - --enable-libfdk-aac
