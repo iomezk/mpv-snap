@@ -1,6 +1,6 @@
 base: core18
 name: mpv-nilsboy
-version: "0.32.0-master"
+version: "git"
 summary: a free, open source, and cross-platform media player.
 icon: snap/gui/mpv.svg
 description: |
@@ -12,6 +12,8 @@ description: |
 
   Install with:
   sudo snap install --edge mpv-nilsboy --devmode
+
+  Repository: https://github.com/nilsboy/mpv
 
 grade: stable
 confinement: strict
@@ -68,6 +70,7 @@ parts:
       ./bootstrap.py
       snapcraftctl build
     build-packages:
+      - va-driver-all
       - vdpau-va-driver
       - libvdpau-va-gl1
       - mesa-vdpau-drivers
@@ -704,20 +707,4 @@ parts:
     python-version: python3
     after:
       - ffmpeg
-
-  # libvdpau-va-gl:
-  #   source: https://github.com/i-rinat/libvdpau-va-gl.git
-  #   source-depth: 1
-  #   plugin: cmake
-  #   build-packages:
-  #     - git
-  #     - g++
-  #     - make
-  #     - autoconf
-  #     - libtool
-  #     - cmake
-  #     - automake
-  #     - build-essential
-  #     - libva-dev
-  #     - libgl1-mesa-dev
 
