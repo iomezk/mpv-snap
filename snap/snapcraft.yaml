@@ -312,6 +312,7 @@ parts:
       - desktop-glib-only
       - ffmpeg
       - vapoursynth
+      - libvdpau-va-gl
     organize:
       usr/local: usr/
 
@@ -700,3 +701,22 @@ parts:
     python-version: python3
     after:
       - ffmpeg
+
+  libvdpau-va-gl:
+    source: https://github.com/i-rinat/libvdpau-va-gl.git
+    source-depth: 1
+    plugin: autotools
+    configflags:
+      - --enable-x86simd
+    build-packages:
+      - git
+      - g++
+      - make
+      - autoconf
+      - libtool
+      - cmake
+      - automake
+      - build-essential
+      - libva-dev
+      - libgl1-mesa-dev
+
