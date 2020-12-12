@@ -202,7 +202,7 @@ parts:
       - libxxf86vm1
       - libzmq5
       - libzvbi0
-      - pkg-config
+      # - pkg-config
       - python
       - python-docutils
     stage-packages:
@@ -424,7 +424,7 @@ parts:
       - libxvmc-dev
       - libzmq3-dev
       - libzvbi-dev
-      - pkg-config
+      # - pkg-config
       - texinfo
       - zlib1g-dev
       - libasound2
