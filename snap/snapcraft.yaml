@@ -705,9 +705,8 @@ parts:
   libvdpau-va-gl:
     source: https://github.com/i-rinat/libvdpau-va-gl.git
     source-depth: 1
-    plugin: autotools
+    plugin: cmake
     configflags:
-      - --enable-x86simd
     build-packages:
       - git
       - g++
