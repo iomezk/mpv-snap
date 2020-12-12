@@ -65,6 +65,10 @@ parts:
       ./bootstrap.py
       snapcraftctl build
     build-packages:
+      - vdpau-va-driver
+      - libvdpau-va-gl1
+      - mesa-vdpau-drivers
+      - vdpauinfo
       - build-essential
       - libasound2
       - libasound2-dev
@@ -206,6 +210,10 @@ parts:
       - python
       - python-docutils
     stage-packages:
+      - vdpau-va-driver
+      - libvdpau-va-gl1
+      - mesa-vdpau-drivers
+      - vdpauinfo
       - libuchardet0
       - libharfbuzz0b
       - libx265-146
