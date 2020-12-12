@@ -27,4 +27,4 @@ jobs:
 
       - name: Create Snap
         run: |-
-          docker run -v $(pwd):/snap snapcore/snapcraft sh -c "apt update && cd /snap && snapcraft"
+          docker run -v $(pwd):/app snapcore/snapcraft sh -c "apt update && cd /app && snapcraft"
