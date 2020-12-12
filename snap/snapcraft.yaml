@@ -216,6 +216,7 @@ parts:
       - python
       - python-docutils
     stage-packages:
+      - i965-va-driver
       - va-driver-all
       - vdpau-va-driver
       - libvdpau-va-gl1
