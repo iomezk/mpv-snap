@@ -25,6 +25,9 @@ apps:
     environment:
       # directory where vapoursynth plugins should reside
       VAPOURSYNTH_PLUGIN_PATH: $SNAP/lib/vapoursynth
+      # https://forum.snapcraft.io/t/opengl-error-mesa-loader-fails/15197/ 
+      LD_LIBRARY_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa-gl:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/xorg:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio/
+      LIBGL_DRIVERS_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
     # command: desktop-launch $SNAP/usr/bin/mpv
     command: ./usr/bin/mpv
     plugs:
@@ -312,7 +315,7 @@ parts:
       - desktop-glib-only
       - ffmpeg
       - vapoursynth
-      - libvdpau-va-gl
+      # - libvdpau-va-gl
     organize:
       usr/local: usr/
 
@@ -702,19 +705,19 @@ parts:
     after:
       - ffmpeg
 
-  libvdpau-va-gl:
-    source: https://github.com/i-rinat/libvdpau-va-gl.git
-    source-depth: 1
-    plugin: cmake
-    build-packages:
-      - git
-      - g++
-      - make
-      - autoconf
-      - libtool
-      - cmake
-      - automake
-      - build-essential
-      - libva-dev
-      - libgl1-mesa-dev
+  # libvdpau-va-gl:
+  #   source: https://github.com/i-rinat/libvdpau-va-gl.git
+  #   source-depth: 1
+  #   plugin: cmake
+  #   build-packages:
+  #     - git
+  #     - g++
+  #     - make
+  #     - autoconf
+  #     - libtool
+  #     - cmake
+  #     - automake
+  #     - build-essential
+  #     - libva-dev
+  #     - libgl1-mesa-dev
 
