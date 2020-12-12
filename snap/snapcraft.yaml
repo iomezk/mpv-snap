@@ -13,8 +13,8 @@ description: |
   Install with:
   sudo snap install --edge mpv-nilsboy --devmode
 
-grade: devel
-confinement: devmode
+grade: stable
+confinement: strict
 
 architectures:
   - build-on: amd64
@@ -27,19 +27,19 @@ apps:
       VAPOURSYNTH_PLUGIN_PATH: $SNAP/lib/vapoursynth
     # command: desktop-launch $SNAP/usr/bin/mpv
     command: ./usr/bin/mpv
-    # plugs:
-    #   - home
-    #   - network
-    #   - opengl
-    #   - optical-drive
-    #   - pulseaudio
-    #   - removable-media
-    #   - unity7
-    #   - x11
-    #   # allow access to ~/.config/mpv
-    #   # - config-mpv
-    #   # allow access to system fonts
-    #   - desktop
+    plugs:
+      - home
+      - network
+      - opengl
+      - optical-drive
+      - pulseaudio
+      - removable-media
+      - unity7
+      - x11
+      # allow access to ~/.config/mpv
+      # - config-mpv
+      # allow access to system fonts
+      - desktop
 
 # plugs:
 #   config-mpv:
@@ -152,7 +152,6 @@ parts:
       - libtheora0
       - libtwolame0
       - libuchardet-dev
-      - libuchardet0
       - libv4l-dev
       - libva-dev
       - libva-drm2
@@ -207,6 +206,7 @@ parts:
       - python
       - python-docutils
     stage-packages:
+      - libuchardet0
       - libharfbuzz0b
       - libx265-146
       - libx264-152
@@ -278,7 +278,6 @@ parts:
       - libtesseract4
       - libtheora0
       - libtwolame0
-      - libuchardet0
       - libva-drm2
       - libva-wayland2
       - libva2
@@ -677,12 +676,11 @@ parts:
       usr/local: usr/
 
   desktop-glib-only:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: glib-only
+    plugin: make
     build-packages:
       - libglib2.0-dev
-    plugin: make
-    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-    source-depth: 1
-    source-subdir: glib-only
     stage-packages:
       - libglib2.0-bin
 
@@ -691,5 +689,5 @@ parts:
     source-depth: 1
     plugin: python
     python-version: python3
-    after: 
+    after:
       - ffmpeg
