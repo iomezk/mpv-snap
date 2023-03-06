@@ -1,717 +1,120 @@
-base: core18
-name: mpv-nilsboy
-version: "git"
-summary: a free, open source, and cross-platform media player.
-icon: snap/gui/mpv.svg
+base: core20
+name: mpv-wayland
+version: '0.35.1'
+summary: mpv mediaplayer snap with a main focus on Wayland support
 description: |
-  mpv is a media player based on MPlayer and mplayer2.
-  It supports a wide variety of video file formats,
-  audio and video codecs, and subtitle types.
+  To use with KDE libs instead of Gnome:
 
-  This version features a motion compensation option via vapoursynth.
-
-  Install with:
-  sudo snap install --edge mpv-nilsboy --devmode
-
-  Repository: https://github.com/nilsboy/mpv
-
+  snap install kde-frameworks-5-99-qt-5-15-7-core20  
+  snap install mpv-wayland  
+  snap disconnect mpv-wayland:gnome-3-38-2004  
+  snap connect mpv-wayland:gnome-3-38-2004 kde-frameworks-5-99-qt-5-15-7-core20:kde-frameworks-5-99-qt-5-15-core20
+icon: snap/gui/icon.svg
 grade: stable
 confinement: strict
 
-architectures:
-  - build-on: amd64
-    run-on: amd64
-
 apps:
-  mpv:
+  mpv-wayland:
+    adapter: none
     environment:
-      # directory where vapoursynth plugins should reside
-      VAPOURSYNTH_PLUGIN_PATH: $SNAP/lib/vapoursynth
-      # https://forum.snapcraft.io/t/opengl-error-mesa-loader-fails/15197/ 
-      LD_LIBRARY_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa-gl:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/xorg:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio/
-      LIBGL_DRIVERS_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
-      LIBVA_DRIVERS_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
-    # command: desktop-launch $SNAP/usr/bin/mpv
-    command: ./usr/bin/mpv
-    # TODO: vainfo vdpauinfo
+      PATH: $SNAP/bin:$PATH
+      LD_LIBRARY_PATH: $SNAP/gui-lib/usr/lib:$SNAP/gui-lib/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/gui-lib/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+      XKB_CONFIG_ROOT: $SNAP/gui-lib/usr/share/X11/xkb
+      __EGL_VENDOR_LIBRARY_DIRS: $SNAP/gui-lib/usr/share/glvnd/egl_vendor.d
+      LIBGL_DRIVERS_PATH: $SNAP/gui-lib/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
+      LIBVA_DRIVERS_PATH: $SNAP/gui-lib/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
+    command: bin/mpv
     plugs:
-      - home
-      - network
-      - opengl
-      - optical-drive
-      - pulseaudio
-      - removable-media
-      - unity7
-      - x11
-      # allow access to ~/.config/mpv
-      # - config-mpv
-      # allow access to system fonts
-      - desktop
+    - audio-playback
+    - home
+    - network
+    - opengl
+    - removable-media
+    - wayland
 
-# plugs:
-#   config-mpv:
-#     interface: personal-files
-#     write:
-#       - $HOME/.config/mpv
+plugs:
+  gnome-3-38-2004:
+    interface: content
+    default-provider: gnome-3-38-2004
+    target: $SNAP/gui-lib
+
+slots:
+  mpv:
+    interface: content
+    read: [ / ]
 
 parts:
-  mpv:
-    source: https://github.com/mpv-player/mpv.git
-    source-depth: 1
-    plugin: waf
-    configflags:
-      - --enable-cdda
-      - --enable-dvdnav
-      # - --enable-dvdread
-      # - --enable-encoding
-      - --enable-libmpv-shared
-      - --disable-static-build
-      # - --enable-libsmbclient
-      - --disable-build-date
-    override-build: |
-      ./bootstrap.py
-      snapcraftctl build
+  mpv-wayland:
+    source: https://github.com/mpv-player/mpv/archive/v0.35.1.tar.gz
+    source-type: tar
+    plugin: meson
+    meson-parameters:
+    - -Dprefix=/usr
+    - -Dbuildtype=release
+    - -Dbuild-date=false
+    - -Dpulse=enabled
+    - -Ddrm=enabled
+    - -Degl=enabled -Degl-wayland=enabled
+    - -Dwayland=enabled
+    - -Dvaapi-wayland=enabled -Dvaapi-drm=disabled -Dvaapi-x11=disabled -Dvaapi-x-egl=disabled
+    - -Dx11=disabled
+    override-pull: |
+      snapcraftctl pull
+      sed '1224s/MPMIN(ver, 4)/MPMIN(ver, 3)/' -i video/out/wayland_common.c
     build-packages:
-      - yasm
-      - va-driver-all
-      - vdpau-va-driver
-      - libvdpau-va-gl1
-      - mesa-vdpau-drivers
-      - vdpauinfo
-      - build-essential
-      - libasound2
-      - libasound2-dev
-      - libass-dev
-      - libass9
-      - libasyncns0
-      - libbluray-dev
-      - libbluray2
-      - libbs2b0
-      - libcaca0
-      - libcairo2
-      - libcdio-cdda2
-      - libcdio-paranoia-dev
-      - libcdio-paranoia2
-      - libcdio17
-      - libcrystalhd3
-      - libdrm2
-      - libdvdnav-dev
-      - libdvdnav4
-      - libdvdread-dev
-      - libdvdread4
-      - libegl1
-      - libegl1-mesa-dev
-      - libenca-dev
-      - libfdk-aac-dev
-      - libfdk-aac1
-      - libfftw3-double3
-      - libflac8
-      - libflite1
-      - libfontconfig1
-      - libfreetype6
-      - libfribidi0
-      - libgbm-dev
-      - libgbm1
-      - libgl1
-      - libgl1-mesa-dev
-      - libglvnd0
-      - libglx0
-      - libgme0
-      - libgomp1
-      - libgraphite2-3
-      - libgsm1
-      - libguess-dev
-      - libharfbuzz-dev
-      - libharfbuzz0b
-      - libicu60
-      - libjack-dev
-      - libjack0
-      - libjpeg-dev
-      - libjpeg-turbo8
-      - liblcms2-2
-      - liblcms2-dev
-      - liblua5.2-0
-      - liblua5.2-dev
-      - libmp3lame0
-      - libnorm1
-      - libnuma1
-      - libogg0
-      - libopenal1
-      - libopenjp2-7
-      - libopus0
-      - libpgm-5.2-0
-      - libpixman-1-0
-      - libpng16-16
-      - libpulse-dev
-      - libpulse0
-      - libpython3.6
-      - librubberband-dev
-      - librubberband2
-      - libsamplerate0
-      - libsdl2-2.0-0
-      - libsdl2-dev
-      - libshine3
-      - libslang2
-      - libsnappy1v5
-      - libsndfile1
-      - libsndio-dev
-      - libsndio6.1
-      - libsodium23
-      - libsoxr0
-      - libspeex1
-      - libssh-gcrypt-4
-      - libssl-dev
-      - libswscale-dev
-      - libtheora0
-      - libtwolame0
-      - libuchardet-dev
-      - libv4l-dev
-      - libva-dev
-      - libva-drm2
-      - libva-x11-2
-      - libva2
-      - libvdpau-dev
-      - libvdpau1
-      - libvorbis0a
-      - libvorbisenc2
-      - libvpx5
-      - libwavpack1
-      - libwayland-client0
-      - libwayland-cursor0
-      - libwayland-dev
-      - libwayland-egl1
-      - libwayland-server0
-      - libwebp6
-      - libwebpmux3
-      - libx11-6
-      - libx11-dev
-      - libx264-152
-      - libx264-dev
-      - libx265-146
-      - libxau6
-      - libxcb-render0
-      - libxcb-shape0
-      - libxcb-shm0
-      - libxcb-xfixes0
-      - libxcb1
-      - libxcursor1
-      - libxdmcp6
-      - libxext6
-      - libxfixes3
-      - libxi6
-      - libxinerama-dev
-      - libxinerama1
-      - libxkbcommon-dev
-      - libxkbcommon0
-      - libxml2
-      - libxrandr-dev
-      - libxrandr2
-      - libxrender1
-      - libxss-dev
-      - libxss1
-      - libxv-dev
-      - libxv1
-      - libxvidcore4
-      - libxxf86vm1
-      - libzmq5
-      - libzvbi0
-      # - pkg-config
-      - python
-      - python-docutils
+    - pkg-config
+    - libavfilter-dev
+    - libass-dev
+    - libpulse-dev
+    - libdrm-dev
+    - libwayland-dev
+    - wayland-protocols
+    - libxkbcommon-dev
+    - libegl1-mesa-dev
+    - libva-dev
     stage-packages:
-      - i965-va-driver
-      - va-driver-all
-      - vdpau-va-driver
-      - libvdpau-va-gl1
-      - mesa-vdpau-drivers
-      - vdpauinfo
-      - vainfo
-      - libuchardet0
-      - libharfbuzz0b
-      - libx265-146
-      - libx264-152
-      - libssh-4
-      - libsnappy1v5
-      - libgsm1
-      - libfreetype6
-      - libfontconfig1
-      - samba-libs
-      - libpython3.6
-      - libsmbclient
-      - libgl1
-      - libglu1-mesa
-      - libglx0
-      - libglvnd0
-      - libsdl2-2.0-0
-      - libxcursor1
-      - libxi6
-      - libxxf86vm1
-      - libslang2
-      - libwayland-egl1
-      - libegl1
-      - liblua5.2-0
-      - liblcms2-2
-      - libfftw3-3
-      - libasound2
-      - libass9
-      - libatomic1
-      - libbluray2
-      - libbs2b0
-      - libcaca0
-      - libcdio-cdda2
-      - libcdio-paranoia2
-      - libcdio17
-      - libchromaprint1
-      - libcrystalhd3
-      - libdrm2
-      - libdvdnav4
-      - libdvdread4
-      - libegl-mesa0
-      - libenca0
-      - libfdk-aac1
-      - libflite1
-      - libfribidi0
-      - libgbm1
-      - libgme0
-      - libguess1
-      - libjack0
-      - libjpeg62
-      - libjpeg8
-      - libjpeg9
-      - liblzma5
-      - libmp3lame0
-      - libnetcdf13
-      - libomxil-bellagio0
-      - libopenal1
-      - libopencore-amrnb0
-      - libopencore-amrwb0
-      - libopus0
-      - libpulse0
-      - librubberband2
-      - libsctp1
-      - libshine3
-      - libsodium23
-      - libsoxr0
-      - libspeex1
-      - libssh-gcrypt-4
-      - libswscale4
-      - libtesseract4
-      - libtheora0
-      - libtwolame0
-      - libva-drm2
-      - libva-wayland2
-      - libva2
-      - libvdpau1
-      - libvo-amrwbenc0
-      - libvpx5
-      - libwavpack1
-      - libwayland-client0
-      - libwayland-cursor0
-      - libwebp6
-      - libxcb-shape0
-      - libxext6
-      - libxinerama1
-      - libxkbcommon0
-      - libxrandr2
-      - libxss1
-      - libxv1
-      - libxvidcore4
-      - libxvmc1
-      - libzmq5
-      - libzvbi0
-      - freeglut3
-    after:
-      # - desktop-glib-only
-      - ffmpeg
-      # - vapoursynth
-      # - libvdpau-va-gl
+    - libavfilter7
+    - libva-wayland2
+    prime:
+    - -etc
+    - -usr/bin/fc-*
+    - -usr/bin/update-mime-database
+    - -**/gdk-pixbuf-2.0
+    - -**/vdpau
+    - -usr/share
+# comm -12 <(find /snap/gnome-3-38-2004/current/ ! -type d -printf '%f\n' | sort -u) <(find /snap/mpv-wayland/current/ ! -type d -printf '%f\n' | sort -u)
+    - -**/libX*
+    - -**/libasound.so.2*
+    - -**/libcairo*
+    - -**/libdatrie.so.1*
+    - -**/libdrm.so.2*
+    - -**/libfontconfig.so.1*
+    - -**/libfreetype.so.6*
+    - -**/libfribidi.so.0*
+    - -**/libgdk*
+    - -**/libgomp.so.1*
+    - -**/libgraphite2.so.*
+    - -**/libharfbuzz.so.0
+    - -**/libicu*
+    - -**/libjbig.so.0
+    - -**/libjpeg.so.8*
+    - -**/libogg.so.0*
+    - -**/libopenjp2.so.*
+    - -**/libpango*
+    - -**/libpixman-1.so.0
+    - -**/libpng16.so.16*
+    - -**/librsvg-2.so.2*
+    - -**/libthai.so.0*
+    - -**/libtiff.so.5*
+    - -**/libva.so.2*
+    - -**/libvorbis*
+    - -**/libwayland-client.so.0*
+    - -**/libwebp.so.6*
+    - -**/libxcb*
+    - -**/libxml2.so.2*
+  mpv-wrapper:
+    source: snap/local/
+    source-type: local
+    plugin: dump
     organize:
-      usr/local: usr/
-
-  ffmpeg:
-    source: https://github.com/FFmpeg/FFmpeg.git
-    source-depth: 1
-    plugin: autotools
-    configflags:
-      - --enable-gpl
-      - --enable-openssl
-      - --enable-nonfree
-      - --enable-avresample
-      # TODO: install headers for avisynth - got removed from ffmpeg master?:
-      # - --enable-avisynth
-      - --enable-ladspa
-      - --enable-libass
-      - --enable-libbluray
-      - --enable-libbs2b
-      - --enable-libcaca
-      - --enable-libcdio
-      - --enable-libflite
-      - --enable-libfontconfig
-      - --enable-libfreetype
-      - --enable-libfribidi
-      - --enable-libgme
-      - --enable-libgsm
-      - --enable-libmp3lame
-      - --enable-libopenjpeg
-      - --enable-libopus
-      - --enable-libpulse
-      - --enable-librubberband
-      - --enable-libshine
-      - --enable-libsnappy
-      - --enable-libsoxr
-      - --enable-libspeex
-      - --enable-libssh
-      - --enable-libtheora
-      - --enable-libtwolame
-      - --enable-libvorbis
-      - --enable-libvpx
-      # unknown option (2020-12-12)
-      # - --enable-libwavpack
-      - --enable-libwebp
-      - --enable-libx264
-      - --enable-libfdk-aac
-      - --enable-libx265
-      - --enable-libxvid
-      - --enable-libzmq
-      - --enable-libzvbi
-      - --enable-omx
-      - --enable-openal
-      - --enable-opengl
-      - --enable-sdl2
-      - --enable-shared
-      - --disable-static
-    build-packages:
-      - git
-      - g++
-      - make
-      - autoconf
-      - libtool
-      - cmake
-      - automake
-      - build-essential
-      - openssl
-      - flite1-dev
-      - frei0r-plugins-dev
-      - ladspa-sdk
-      - libass-dev
-      - libbluray-dev
-      - libbs2b-dev
-      - libcaca-dev
-      - libcdio-paranoia-dev
-      - libchromaprint-dev
-      - libcrystalhd-dev
-      - libdc1394-22-dev
-      - libfontconfig1-dev
-      - libfreetype6-dev
-      - libfribidi-dev
-      - libgl1-mesa-dev
-      - libgme-dev
-      - libgsm1-dev
-      - libleptonica-dev
-      - liblzma-dev
-      - libmp3lame-dev
-      - libnetcdf-dev
-      - libopenal-dev
-      - libomxil-bellagio-dev
-      - libopencore-amrnb-dev
-      - libopencore-amrwb-dev
-      - libopencv-imgproc-dev
-      - libopenjp2-7-dev
-      - libopus-dev
-      - libpulse-dev
-      - librubberband-dev
-      - libsctp-dev
-      - libsdl2-dev
-      - libshine-dev
-      - libsnappy-dev
-      - libsoxr-dev
-      - libspeex-dev
-      - libssh-gcrypt-dev
-      - libtesseract-dev
-      - libtheora-dev
-      - libtwolame-dev
-      - libva-dev
-      - libvdpau-dev
-      - libvo-amrwbenc-dev
-      - libvorbis-dev
-      - libvpx-dev
-      - libwavpack-dev
-      - libwebp-dev
-      - libx264-dev
-      - libx265-dev
-      - libxcb-shape0-dev
-      - libxv-dev
-      - libxvidcore-dev
-      - libxvmc-dev
-      - libzmq3-dev
-      - libzvbi-dev
-      # - pkg-config
-      - texinfo
-      - zlib1g-dev
-      - libasound2
-      - libass9
-      - libasyncns0
-      - libbluray2
-      - libbs2b0
-      - libcaca0
-      - libcairo2
-      - libcdio-cdda2
-      - libcdio-paranoia2
-      - libcdio17
-      - libcrystalhd3
-      - libdrm2
-      - libfdk-aac1
-      - libfftw3-double3
-      - libflac8
-      - libflite1
-      - libfontconfig1
-      - libfreetype6
-      - libfribidi0
-      - libgl1
-      - libglvnd0
-      - libglx0
-      - libgme0
-      - libgomp1
-      - libgraphite2-3
-      - libgsm1
-      - libharfbuzz0b
-      - libicu60
-      - libmp3lame0
-      - libnorm1
-      - libnuma1
-      - libogg0
-      - libopenal1
-      - libopenjp2-7
-      - libopus0
-      - libpgm-5.2-0
-      - libpixman-1-0
-      - libpng16-16
-      - libpulse0
-      - librubberband2
-      - libsamplerate0
-      - libsdl2-2.0-0
-      - libshine3
-      - libslang2
-      - libsnappy1v5
-      - libsndfile1
-      - libsndio6.1
-      - libsodium23
-      - libsoxr0
-      - libspeex1
-      - libssh-gcrypt-4
-      - libtheora0
-      - libtwolame0
-      - libva-drm2
-      - libva-x11-2
-      - libva2
-      - libvdpau1
-      - libvorbis0a
-      - libvorbisenc2
-      - libvpx5
-      - libwavpack1
-      - libwayland-client0
-      - libwayland-cursor0
-      - libwayland-egl1
-      - libwebp6
-      - libwebpmux3
-      - libx11-6
-      - libx264-152
-      - libx265-146
-      - libxau6
-      - libxcb-render0
-      - libxcb-shape0
-      - libxcb-shm0
-      - libxcb-xfixes0
-      - libxcb1
-      - libxcursor1
-      - libxdmcp6
-      - libxext6
-      - libxfixes3
-      - libxi6
-      - libxinerama1
-      - libxkbcommon0
-      - libxml2
-      - libxrandr2
-      - libxrender1
-      - libxss1
-      - libxv1
-      - libxvidcore4
-      - libxxf86vm1
-      - libzmq5
-      - libzvbi0
-    stage-packages:
-      - libasound2
-      - libass9
-      - libasyncns0
-      - libbluray2
-      - libbs2b0
-      - libcaca0
-      - libcairo2
-      - libcdio-cdda2
-      - libcdio-paranoia2
-      - libcdio17
-      - libcrystalhd3
-      - libdrm2
-      - libfdk-aac1
-      - libfftw3-double3
-      - libflac8
-      - libflite1
-      - libfontconfig1
-      - libfreetype6
-      - libfribidi0
-      - libgl1
-      - libglvnd0
-      - libglx0
-      - libgme0
-      - libgomp1
-      - libgraphite2-3
-      - libgsm1
-      - libharfbuzz0b
-      - libicu60
-      - libmp3lame0
-      - libnorm1
-      - libnuma1
-      - libogg0
-      - libopenal1
-      - libopenjp2-7
-      - libopus0
-      - libpgm-5.2-0
-      - libpixman-1-0
-      - libpng16-16
-      - libpulse0
-      - librubberband2
-      - libsamplerate0
-      - libsdl2-2.0-0
-      - libshine3
-      - libslang2
-      - libsnappy1v5
-      - libsndfile1
-      - libsndio6.1
-      - libsodium23
-      - libsoxr0
-      - libspeex1
-      - libssh-gcrypt-4
-      - libtheora0
-      - libtwolame0
-      - libva-drm2
-      - libva-x11-2
-      - libva2
-      - libvdpau1
-      - libvorbis0a
-      - libvorbisenc2
-      - libvpx5
-      - libwavpack1
-      - libwayland-client0
-      - libwayland-cursor0
-      - libwayland-egl1
-      - libwebp6
-      - libwebpmux3
-      - libx11-6
-      - libx264-152
-      - libx265-146
-      - libxau6
-      - libxcb-render0
-      - libxcb-shape0
-      - libxcb-shm0
-      - libxcb-xfixes0
-      - libxcb1
-      - libglu1-mesa
-      - libxv1
-      - libxvidcore4
-      - libzmq5
-      - libzvbi0
-      - freeglut3
-    organize:
-      usr/local: usr/
-
-  # vapoursynth:
-  #   # NOTE: Releases R36 and R37 seem to have errors
-  #   source: https://github.com/vapoursynth/vapoursynth.git
-  #   source-depth: 1
-  #   source-tag: R35
-  #   # replace hardcoded vapoursynth plugin directory with snap one
-  #   override-build: |
-  #     perl -pi -007e 's/\Qstd::string systemPluginDir(tmp ? tmp : VS_PATH_PLUGINDIR);\E/const char *snapPluginDir = getenv("VAPOURSYNTH_PLUGIN_PATH");\nstd::string systemPluginDir(snapPluginDir);\n/gms' src/core/vscore.cpp
-  #     snapcraftctl build
-  #   plugin: autotools
-  #   configflags:
-  #     - --disable-ocr
-  #   build-packages:
-  #     - git
-  #     - g++
-  #     - make
-  #     - autoconf
-  #     - libtool
-  #     - cmake
-  #     - cython3
-  #     - automake
-  #     - build-essential
-  #     - yasm
-  #     - libpython3.6
-  #   stage-packages:
-  #     - libpython3.6
-  #   organize:
-  #     usr/local/lib: usr/lib
-  #   after:
-  #     - zimg
-
-  # vapoursynth-mvtools:
-  #   source: git://github.com/dubhater/vapoursynth-mvtools.git
-  #   source-depth: 1
-  #   plugin: meson
-  #   override-build: |
-  #     snapcraftctl build
-  #     mkdir -pv $SNAPCRAFT_PART_INSTALL/lib/vapoursynth/
-  #     cp $SNAPCRAFT_PART_INSTALL/usr/local/lib/x86_64-linux-gnu/* $SNAPCRAFT_PART_INSTALL/lib/vapoursynth/
-  #   build-packages:
-  #     - git
-  #     - g++
-  #     - make
-  #     - autoconf
-  #     - libtool
-  #     - cmake
-  #     - automake
-  #     - build-essential
-  #     - libfftw3-dev
-  #     - nasm
-  #   after:
-  #     - vapoursynth
-
-  # zimg:
-  #   source: https://github.com/sekrit-twc/zimg.git
-  #   source-depth: 1
-  #   # need by vapoursynth (2020-06-01)
-  #   source-branch: v2.9
-  #   plugin: autotools
-  #   configflags:
-  #     - --enable-x86simd
-  #   build-packages:
-  #     - git
-  #     - g++
-  #     - make
-  #     - autoconf
-  #     - libtool
-  #     - cmake
-  #     - automake
-  #     - build-essential
-  #   organize:
-  #     usr/local: usr/
-
-  # desktop-glib-only:
-  #   source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-  #   source-depth: 1
-  #   source-subdir: glib-only
-  #   plugin: make
-  #   build-packages:
-  #     - libglib2.0-dev
-  #   stage-packages:
-  #     - libglib2.0-bin
-
-  # youtube-dl:
-  #   source: https://github.com/rg3/youtube-dl.git
-  #   source-depth: 1
-  #   plugin: python
-  #   python-version: python3
-  #   after:
-  #     - ffmpeg
-
+      mpv: bin/
