@@ -1,12 +1,22 @@
 base: core20
 name: mpv-wayland
-version: '0.35.1'
+version: '0.35.1-1'
 summary: mpv mediaplayer snap with a main focus on Wayland support
 description: |
-  To use with KDE libs instead of Gnome:
+  Enable youtube suport:
+
+  snap install yt-dlp-core20  
+  snap connect mpv-wayland:plug20 yt-dlp-core20:yt-dlp-core20
+
+  ___
+  Allow access to /media, /run/media and /mnt:
+
+  snap connect mpv-wayland:removable-media
+
+  ___
+  Use KDE libs instead of Gnome:
 
   snap install kde-frameworks-5-99-qt-5-15-7-core20  
-  snap install mpv-wayland  
   snap disconnect mpv-wayland:gnome-3-38-2004  
   snap connect mpv-wayland:gnome-3-38-2004 kde-frameworks-5-99-qt-5-15-7-core20:kde-frameworks-5-99-qt-5-15-core20
 icon: snap/gui/icon.svg
@@ -18,14 +28,16 @@ apps:
     adapter: none
     environment:
       HOME: $SNAP_USER_COMMON
-      PATH: $SNAP/bin:$PATH
+      PATH: $SNAP/usr/bin:$PATH
       LD_LIBRARY_PATH: $SNAP/gui-lib/usr/lib:$SNAP/gui-lib/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/gui-lib/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
       XKB_CONFIG_ROOT: $SNAP/gui-lib/usr/share/X11/xkb
       __EGL_VENDOR_LIBRARY_DIRS: $SNAP/gui-lib/usr/share/glvnd/egl_vendor.d
       LIBGL_DRIVERS_PATH: $SNAP/gui-lib/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
       LIBVA_DRIVERS_PATH: $SNAP/gui-lib/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
       FONTCONFIG_PATH: $SNAP/gui-lib/etc/fonts
-    command: bin/mpv
+    command-chain:
+    - bin/mpv
+    command: usr/bin/mpv
     plugs:
     - audio-playback
     - home
@@ -39,9 +51,12 @@ plugs:
     interface: content
     default-provider: gnome-3-38-2004
     target: $SNAP/gui-lib
+  plug20:
+    interface: content
+    target: $SNAP/plug
 
 slots:
-  mpv:
+  mpv-core20:
     interface: content
     read: [ / ]
 

@@ -1,2 +1,14 @@
 #!/bin/sh
-XDG_RUNTIME_DIR=$(dirname "$XDG_RUNTIME_DIR") exec "$SNAP/usr/bin/mpv" --hwdec=vaapi "$@"
+for PLUG in "$SNAP/plug"*; do
+	PATH=$PATH${PATH:+:}$PLUG/usr/bin:$PLUG/bin
+	PYTHONPATH=$PYTHONPATH${PYTHONPATH:+:}$PLUG/lib/python3.8/site-packages
+done
+export PATH PYTHONPATH "XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR%/*}"
+case "$1" in
+*mpv)
+	shift
+	exec "$SNAP/usr/bin/mpv" --hwdec=vaapi "$@"
+	;;
+*)
+	exec "$@"
+esac
