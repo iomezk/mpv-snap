@@ -24,6 +24,7 @@ apps:
       __EGL_VENDOR_LIBRARY_DIRS: $SNAP/gui-lib/usr/share/glvnd/egl_vendor.d
       LIBGL_DRIVERS_PATH: $SNAP/gui-lib/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
       LIBVA_DRIVERS_PATH: $SNAP/gui-lib/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
+      FONTCONFIG_PATH: $SNAP/gui-lib/etc/fonts
     command: bin/mpv
     plugs:
     - audio-playback
@@ -53,6 +54,7 @@ parts:
     - -Dprefix=/usr
     - -Dbuildtype=release
     - -Dbuild-date=false
+    - -Dlua=enabled
     - -Dpulse=enabled
     - -Ddrm=enabled
     - -Degl=enabled -Degl-wayland=enabled
@@ -73,14 +75,17 @@ parts:
     - libxkbcommon-dev
     - libegl1-mesa-dev
     - libva-dev
+    - liblua5.2-dev
     stage-packages:
     - libavfilter7
     - libva-wayland2
+    - liblua5.2-0
     prime:
     - -etc
     - -usr/bin/fc-*
     - -usr/bin/update-mime-database
     - -**/gdk-pixbuf-2.0
+    - -**/liblua*-c++*
     - -**/vdpau
     - -usr/share
 # comm -12 <(find /snap/gnome-3-38-2004/current/ ! -type d -printf '%f\n' | sort -u) <(find /snap/mpv-wayland/current/ ! -type d -printf '%f\n' | sort -u)
