@@ -17,6 +17,7 @@ apps:
   mpv-wayland:
     adapter: none
     environment:
+      HOME: $SNAP_USER_COMMON
       PATH: $SNAP/bin:$PATH
       LD_LIBRARY_PATH: $SNAP/gui-lib/usr/lib:$SNAP/gui-lib/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/gui-lib/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
       XKB_CONFIG_ROOT: $SNAP/gui-lib/usr/share/X11/xkb
