@@ -83,6 +83,7 @@ parts:
       snapcraftctl pull
       sed '1224s/MPMIN(ver, 4)/MPMIN(ver, 3)/' -i video/out/wayland_common.c
     build-packages:
+    - meson
     - pkg-config
     - libavfilter-dev
     - libass-dev
