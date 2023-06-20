@@ -1,5 +1,8 @@
 # mpv mediaplayer snap with a main focus on Wayland support
+\
+Configuration files can be placed under `/home/<user>/snap/mpv-wayland/common/.config/mpv/` directory
 
+___
 ### Enable youtube support:
 ```sh
 snap install yt-dlp-core20  

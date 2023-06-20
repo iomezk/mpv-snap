@@ -3,6 +3,9 @@ name: mpv-wayland
 version: '0.35.1-1'
 summary: mpv mediaplayer snap with a main focus on Wayland support
 description: |
+  Configuration files can be placed under /home/᚜user᚛/snap/mpv-wayland/common/.config/mpv/ directory
+
+  ___
   Enable youtube suport:
 
   snap install yt-dlp-core20  
